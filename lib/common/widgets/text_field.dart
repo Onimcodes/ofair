@@ -14,6 +14,7 @@ final TextEditingController fieldController;
 final String label;
 final bool obscureText;
 final String? Function(String?) fieldValidator;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(

@@ -15,19 +15,26 @@ import 'package:ofair/domain/repository/users_repository.dart';
 import 'package:ofair/presentation/bloc/users_bloc.dart';
 import 'package:ofair/presentation/login_bloc/login_bloc.dart';
 import 'package:ofair/presentation/register_bloc/register_block.dart';
+import 'package:ofair/presentation/ride_request_bloc/ride_requests_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var getit = GetIt.instance;
 
 
-void setup() {
+Future<void> setup() async {
+
+  final prefs = await SharedPreferences.getInstance();
+
+
   getit.registerSingleton(ApiClient());
   getit.registerSingleton(OfairApiClient());
+  getit.registerSingleton<SharedPreferences>(prefs);
   getit.registerLazySingleton(() => UserRemoteDatasource(dio: getit<ApiClient>().getDio()));
-  getit.registerLazySingleton(() => OfairRemoteDatasource(dio: getit<OfairApiClient>().getDio()));
+  getit.registerLazySingleton(() => OfairRemoteDatasource(dio: getit<OfairApiClient>().getDio(), prefs: getit<SharedPreferences>() ));
   getit.registerLazySingleton<AuthRepository>(()
    => AuthRepositoryImpl(ofairRemoteDatasource: getit()));
   getit.registerLazySingleton<UsersRepository>(
-    ()    => UsersRepositoryImpl(userRemoteDatasource: getit()),
+    ()    => UsersRepositoryImpl(userRemoteDatasource: getit(), ofairRemoteDatasource: getit()),
 
   );
 
@@ -35,5 +42,6 @@ void setup() {
   getit.registerFactory(() => UsersBloc(usersRepository: getit()));
   getit.registerFactory(() => RegisterBloc(authRepository: getit()));
   getit.registerFactory(() => LoginBloc(authRepository: getit()));
+  getit.registerFactory(() => RideRequestsBloc(usersRepository: getit()));
   
 }

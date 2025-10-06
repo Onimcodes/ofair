@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ofair/common/dependency_injection.dart';
 import 'package:ofair/common/routing/router.dart';
 import 'package:ofair/common/routing/router_names.dart';
@@ -32,7 +33,8 @@ class SignupPage extends StatelessWidget {
               textColor: Colors.white,
               fontSize: 18.0,
             );
-            AppRouter.go(context, RouterNames.loginPage);
+            AppRouter.go(context, RouterNames.loginPage,extra: 
+            {'email' : state.email!}  );
             // Navigate to login or home page
           } else if (state.status == RegisterStatus.error) {
             // Handle error - show error message
@@ -50,35 +52,40 @@ class SignupPage extends StatelessWidget {
           builder: (context, state) {
             return CommonPageScaffold(
               title: 'Sign Up',
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const WelcomeText(),
-                  GapWidgets.h48,
-                  UserPassForm(
-                    buttonLable: 'Sign Up',
-                    loading: state.status == RegisterStatus.loading,
-                    onFormSubmit: (String email, String password) async {
-                      context.read<RegisterBloc>().add(
-                        RegisterUserEvent(email: email, password: password),
-                      );
-                    },
-                  ),
-
-                  GapWidgets.h48,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Already have an account ?"),
-                      TextButton(
-                        onPressed: () {
-                          AppRouter.go(context, RouterNames.loginPage);
-                        },
-                        child: const Text('Log in '),
-                      ),
-                    ],
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const WelcomeText(),
+                    GapWidgets.h48,
+                    UserPassForm(
+                      buttonLabel: 'Sign Up',
+                      loading: state.status == RegisterStatus.loading,
+                      initialEmail: state.email,
+                      onFormSubmit: (String email, String password) async {
+                        context.read<RegisterBloc>().add(
+                          RegisterUserEvent(email: email, password: password),
+                        );
+                          print('email to be passed :  $email');
+                          
+                      },
+                    ),
+                
+                    GapWidgets.h48,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Already have an account ?"),
+                        TextButton(
+                          onPressed: () {
+                            AppRouter.go(context, RouterNames.loginPage);
+                          },
+                          child: const Text('Log in '),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },

@@ -5,7 +5,7 @@ class CommonPageScaffold extends StatelessWidget {
     super.key,
     required this.title,
     required this.child,
-    this.automaticallyImplyLeading = true,
+    this.automaticallyImplyLeading = false,
     this.centerTitle = false,
     this.withPadding = true,
     this.bottomNavigatorBar,

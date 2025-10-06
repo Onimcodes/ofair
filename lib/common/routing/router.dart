@@ -12,9 +12,11 @@ import 'package:ofair/common/routing/router_names.dart';
     context,
     RouterNames routerName, {
     Map<String, String> pathParameters = const {},
+    Object? extra, 
     }) {
       return GoRouter.of(context).pushNamed<T>(routerName.name,
-      pathParameters: pathParameters
+      pathParameters: pathParameters,
+      extra: extra
       );
     }
 

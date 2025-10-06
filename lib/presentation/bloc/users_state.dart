@@ -11,7 +11,7 @@ class UserState {
   UserState._({
     required this.status,
     this.errorMessage,
-    this.users,
+    this.users,   
   });
 
   factory UserState.initial() =>  UserState._(status : UserStatus.initial);

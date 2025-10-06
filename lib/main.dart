@@ -3,11 +3,12 @@ import 'package:ofair/common/dependency_injection.dart';
 import 'package:ofair/common/routing/router.dart';
 import 'package:ofair/common/routing/router_config.dart';
 import 'package:ofair/theme/theme.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setup();
-  runApp(const MainApp());
+  await setup();
+  runApp(const OverlaySupport.global(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {

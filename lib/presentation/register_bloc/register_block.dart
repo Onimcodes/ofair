@@ -14,11 +14,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
 
   Future onRegisterUserEvent(RegisterUserEvent event, Emitter emit) async  {
-  emit(state.copyWith(status: RegisterStatus.loading));
+  emit(state.copyWith(status: RegisterStatus.loading, email: event.email));
   try {
        
     var result = await authRepository.register(RegisterRequestModel(email: event.email, password: event.password));
-    emit(state.copyWith(status: RegisterStatus.success, isSuccess : result));
+      if(result != true) {
+      emit (state.copyWith(status:RegisterStatus.error, isSuccess: result, email: event.email));
+    }else {
+    emit(state.copyWith(status: RegisterStatus.success, isSuccess : result, email: event.email));
+
+    }
   } catch (e) {
     emit(state.copyWith(status : RegisterStatus.error, errorMessage: e.toString()));
   }

@@ -8,7 +8,7 @@ class UsersBloc extends Bloc<UsersEvent, UserState> {
 
   UsersBloc({required this.usersRepository}) : super(UserState.initial()){
     on<GetUsersEvent>(onGetUsersEvent);
-  }
+  }   
 
 
   Future onGetUsersEvent(GetUsersEvent event, Emitter emit) async  {

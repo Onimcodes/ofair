@@ -13,7 +13,7 @@ class LoginUserEvent extends LoginEvent {
   final String password;
   
   LoginUserEvent({required this.email, required this.password});
-
+  
   
 
 }

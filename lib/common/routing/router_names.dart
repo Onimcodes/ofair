@@ -5,5 +5,7 @@ enum RouterNames {
   feedPage,
   createRequestPage,
   requestsPage,
-  usersPage
+  usersPage,
+  HomePage,
+  RequestDetailPage
 }

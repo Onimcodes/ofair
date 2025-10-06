@@ -20,7 +20,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   try {
        
     var result = await authRepository.login(LoginRequestModel(email: event.email, password: event.password));
-    emit(state.copyWith(status: LoginStatus.success, isSuccess : result));
+    if(result != true) {
+      emit (state.copyWith(status:LoginStatus.error, isSuccess: result));
+    }
+   else {
+     emit(state.copyWith(status: LoginStatus.success, isSuccess : result));
+   }
   } catch (e) {
     emit(state.copyWith(status : LoginStatus.error, errorMessage: e.toString()));
   }
