@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:ofair/domain/model/onboarding_models.dart';
 import 'package:ofair/domain/model/ride_request_models.dart';
+import 'package:ofair/domain/model/user_chat_models.dart';
 import 'package:ofair/domain/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,6 +79,9 @@ class OfairRemoteDatasource {
 
   Future<List<RideRequestModel>> getRideRequests(String userId) async {
     var result = await dio.get('api/RideRequest/RideRequests?userId=${userId}');
+    if (result.statusCode == 200) {
+      print('This is the data ooooooo:${result.data}');
+    }
     List<RideRequestModel> rideRequests = (result.data['data'] as List)
         .map((e) => RideRequestModel.fromJson(e))
         .toList();
@@ -90,6 +94,74 @@ class OfairRemoteDatasource {
     }
     return rideRequests;
   }
+
+
+ Future<List<UserConversationModel>> getUserConversations(
+  String userId,
+  String token,
+) async {
+  var result = await dio.get(
+    'api/Chat/conversations',
+    queryParameters: {'userId': userId},
+    options: Options(
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    ),
+  );
+
+  if (result.statusCode == 200) {
+    print('This is the conversations ooooooo: ${result.data}');
+  }
+
+  List<UserConversationModel> conversations =
+      (result.data['data'] as List)
+          .map((e) => UserConversationModel.fromJson(e))
+          .toList();
+
+  return conversations;
+}
+
+
+Future<List<ChatHistoryMessage>> getChatHistory({
+  required String currentUserId,
+  required String receiverUserId,
+  required String token,
+}) async {
+  try {
+    final response = await dio.get(
+      'api/Chat/chathistory',
+      queryParameters: {
+        'userId': currentUserId,
+        'selectedUserId': receiverUserId,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch chat history');
+    }
+
+    final List chatHistory =
+        response.data['data']?['chatHistory'] ?? [];
+
+    final messages = chatHistory
+        .map((e) => ChatHistoryMessage.fromJson(e))
+        .toList();
+
+    return messages;
+  } catch (e, stackTrace) {
+    print('Error fetching chat history: $e');
+    print(stackTrace);
+    return [];
+  }
+}
+
+
 
   Future<void> saveUserData(Map<String, dynamic> jsonResponse) async {
     String jsonString = jsonEncode(jsonResponse);
@@ -109,7 +181,6 @@ class OfairRemoteDatasource {
     if (userJson == null) return null;
     return jsonDecode(userJson);
   }
-
 
 
 

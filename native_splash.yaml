@@ -1,12 +1,15 @@
 
 flutter_native_splash:
-  android: true
-  ios: true
-  web: false
-
+ 
   # Light mode splash
   color: "#FFFFFF"   # white background
   image: assets/ofairlogo.png
+  android_12:
+    image: assets/ofairlogo.png
+
+  android: true
+  ios: true
+  web: false
 
   # Dark mode splash
   color_dark: "#121212"   # dark gray background

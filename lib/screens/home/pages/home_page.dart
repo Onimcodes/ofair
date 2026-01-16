@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:ofair/common/dependency_injection.dart';
@@ -9,6 +10,7 @@ import 'package:ofair/presentation/login_bloc/login_bloc.dart';
 import 'package:ofair/presentation/ride_request_bloc/ride_requests_bloc.dart';
 import 'package:ofair/presentation/ride_request_bloc/ride_requests_event.dart';
 import 'package:ofair/presentation/ride_request_bloc/ride_requests_state.dart';
+import 'package:ofair/screens/chat/pages/user_conversations_page.dart';
 import 'package:ofair/screens/requests/pages/ride_details_page.dart';
 import 'dart:math';
 import 'package:overlay_support/overlay_support.dart';
@@ -41,6 +43,8 @@ class HomePage extends StatelessWidget {
 
   String? get _profileImage => _userData?['profilePic'];
 
+  String? get _token => _userData?['token'];
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -55,6 +59,7 @@ class HomePage extends StatelessWidget {
         userName: _userName,
         userId: _userId,
         profileImage: _profileImage,
+        token: _token,
       ),
     );
   }
@@ -64,13 +69,14 @@ class _HomePageContent extends StatelessWidget {
   final String userName;
   final String userId;
   final String? profileImage;
-
+  final String? token;
+  final int _currentIndex = 0;
   const _HomePageContent({
     required this.userName,
     required this.userId,
     this.profileImage,
+    this.token
   });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -274,30 +280,51 @@ class _HomePageContent extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.call_outlined),
-            label: 'Call',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map_outlined),
-            label: 'Map',
-          ),
-        ],
-        currentIndex: 0,
-        onTap: (index) {
-          // Handle navigation logic here
-        },
-      ),
+    bottomNavigationBar: BottomNavigationBar(
+  items: const [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home_outlined),
+      label: 'Home',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.chat_bubble_outline),
+      label: 'Chat',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.call_outlined),
+      label: 'Call',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.map_outlined),
+      label: 'Map',
+    ),
+  ],
+  currentIndex: _currentIndex,
+  onTap: (index) {
+    switch (index) {
+      case 0:
+        context.go('/home');
+        break;
+      case 1:
+        // Pass token to conversations page via GoRouter extra
+        // context.go('/chat', extra: {'token': token});
+        Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => UserConversationsPage(userId: userId, token: token ?? '',),
+        ),
+      );
+        break;    
+      case 2:
+        context.go('/call');
+        break;
+      case 3:
+        context.go('/map');
+        break;
+    }
+  },
+),
+
     );
   }
 }

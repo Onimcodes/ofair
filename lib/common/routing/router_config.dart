@@ -5,6 +5,8 @@ import 'package:ofair/common/routing/router_names.dart';
 import 'package:ofair/domain/model/ride_request_models.dart';
 import 'package:ofair/screens/auth/pages/login_page.dart';
 import 'package:ofair/screens/auth/pages/signup_page.dart';
+import 'package:ofair/screens/chat/pages/chat_detail_page.dart';
+import 'package:ofair/screens/chat/pages/user_conversations_page.dart';
 import 'package:ofair/screens/home/pages/home_page.dart';
 import 'package:ofair/screens/requests/pages/requests_page.dart';
 import 'package:ofair/screens/requests/pages/ride_details_page.dart';
@@ -54,6 +56,25 @@ final routerConfig = GoRouter(
         return RideDetailsPage(ride: ride);
         
       }
+      ),
+      GoRoute(
+        path: '/chat',
+        name: RouterNames.ConversationsPage.name,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final userId = extra?['token'] as String?;
+          return UserConversationsPage(userId: userId ?? '', token: '',);
+        },
+      ),
+      GoRoute(
+        path: '/chatDetail',
+        name: RouterNames.ChatDetailPage.name,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final userId = extra?['token'] as String?;
+          return ChatDetailPage(conversationId: userId ?? '', userImage: '', userName: '',);
+        },
       )
+
   ],
 );

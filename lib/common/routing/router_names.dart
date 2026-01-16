@@ -7,5 +7,8 @@ enum RouterNames {
   requestsPage,
   usersPage,
   HomePage,
-  RequestDetailPage
+  RequestDetailPage,
+  ConversationsPage,
+  ChatPage,
+  ChatDetailPage
 }

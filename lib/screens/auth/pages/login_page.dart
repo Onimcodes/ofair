@@ -53,7 +53,7 @@ class LoginPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const WelcomeText(),
-                    GapWidgets.h16,
+                    GapWidgets.h48,
                     UserPassForm(
                       buttonLabel: 'login',
                       loading: state.status == LoginStatus.loading,
